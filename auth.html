@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Authentication</title>
+    <style>
+        .form-container { display: none; }
+        .active { display: block; }
+    </style>
+</head>
+<body>
+    <h2>Welcome! Please Signup or Login</h2>
+
+    <!-- Buttons to toggle forms -->
+    <button onclick="toggleForm('signup')">Signup</button>
+    <button onclick="toggleForm('login')">Login</button>
+
+    <!-- Signup Form -->
+    <div id="signup-form" class="form-container">
+        <h3>Signup</h3>
+        <form action="/auth" method="post">
+            <input type="hidden" name="action" value="signup">
+            <label for="signup-username">Username:</label>
+            <input type="text" id="signup-username" name="username" required><br><br>
+            <label for="signup-password">Password:</label>
+            <input type="password" id="signup-password" name="password" required><br><br>
+            <button type="submit">Signup</button>
+        </form>
+    </div>
+
+    <!-- Login Form -->
+    <div id="login-form" class="form-container">
+        <h3>Login</h3>
+        <form action="/auth" method="post">
+            <input type="hidden" name="action" value="login">
+            <label for="login-username">Username:</label>
+            <input type="text" id="login-username" name="username" required><br><br>
+            <label for="login-password">Password:</label>
+            <input type="password" id="login-password" name="password" required><br><br>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <script>
+        function toggleForm(formType) {
+            document.getElementById("signup-form").classList.remove("active");
+            document.getElementById("login-form").classList.remove("active");
+            document.getElementById(formType + "-form").classList.add("active");
+        }
+        
+        // Default to showing the login form on page load
+        toggleForm('login');
+    </script>
+</body>
+</html>

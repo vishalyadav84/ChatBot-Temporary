@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chatbot with Authentication</title>
+    <link rel="stylesheet" href="../static/style.css" />
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body, html {
+        height: 100%;
+      }
+      .container {
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      #auth-card {
+        width: 100%;
+        max-width: 400px;
+      }
+      #chatbot-card {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 300px;
+        display: none;
+      }
+      .circle-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: #007bff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .circle-btn img {
+        width: 40px;
+        height: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="card" id="auth-card">
+        <div class="card-header">
+          <h2 class="text-center">Welcome to Chatbot</h2>
+        </div>
+        <div class="card-body">
+          <ul class="nav nav-tabs" id="authTabs" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="login-tab" data-toggle="tab" href="#login" role="tab">Login</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="signup-tab" data-toggle="tab" href="#signup" role="tab">Sign Up</a>
+            </li>
+          </ul>
+          <div class="tab-content mt-3" id="authTabContent">
+            <div class="tab-pane fade show active" id="login" role="tabpanel">
+              <form id="login-form">
+                <div class="form-group">
+                  <input type="email" class="form-control" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                  <input type="password" class="form-control" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
+              </form>
+            </div>
+            <div class="tab-pane fade" id="signup" role="tabpanel">
+              <form id="signup-form">
+                <div class="form-group">
+                  <input type="email" class="form-control" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                  <input type="password" class="form-control" placeholder="Password" required>
+                </div>
+                <div class="form-group">
+                  <input type="password" class="form-control" placeholder="Confirm Password" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <a href="/login.html" class="circle-btn" id="toggle-chatbot">
+      <img
+        src="https://png.pngtree.com/png-clipart/20230401/original/pngtree-smart-chatbot-cartoon-clipart-png-image_9015126.png"
+        alt="Logo"
+      />
+    </a>
+    
+    <script>
+      let isAuthenticated = false;
+
+      document.getElementById("toggle-chatbot").addEventListener("click", function () {
+        if (isAuthenticated) {
+          var chatbotCard = document.getElementById("chatbot-card");
+          chatbotCard.style.display = chatbotCard.style.display === "none" || chatbotCard.style.display === "" ? "block" : "none";
+        } else {
+          alert("Please log in or sign up to use the chatbot.");
+        }
+      });
+
+      document.getElementById("close-chatbot").addEventListener("click", function () {
+        document.getElementById("chatbot-card").style.display = "none";
+      });
+
+      document.getElementById("send-btn").addEventListener("click", sendMessage);
+
+      document.getElementById("user-input").addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+          sendMessage();
+        }
+      });
+
+      document.getElementById("login-form").addEventListener("submit", function(e) {
+        e.preventDefault();
+        // Simulating login
+        isAuthenticated = true;
+        showAuthenticatedState();
+      });
+
+      document.getElementById("signup-form").addEventListener("submit", function(e) {
+        e.preventDefault();
+        // Simulating signup
+        isAuthenticated = true;
+        showAuthenticatedState();
+      });
+
+      function showAuthenticatedState() {
+        document.querySelector('.container').innerHTML = '<div class="card"><div class="card-body"><h2 class="text-center">Welcome! You are now logged in.</h2><p class="text-center">Click the chatbot icon to start chatting.</p></div></div>';
+      }
+
+      function sendMessage() {
+        var userInput = document.getElementById("user-input").value;
+        if (userInput.trim() === "") return;
+        var chatBody = document.getElementById("chat-body");
+        var userMessageDiv = document.createElement("div");
+        userMessageDiv.className = "message user";
+        userMessageDiv.textContent = userInput;
+        chatBody.appendChild(userMessageDiv);
+        document.getElementById("user-input").value = "";
+
+        fetch("/get_response", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: userInput }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            var botMessageDiv = document.createElement("div");
+            botMessageDiv.className = "message bot";
+            botMessageDiv.textContent = data.response;
+            chatBody.appendChild(botMessageDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+    </script>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,85 @@
+.circle-btn {
+    width: 60px; 
+    height: 60px;
+    border-radius: 50%; 
+    border: none;
+    overflow: hidden; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent; 
+    padding: 0;
+    cursor: pointer; 
+    transition: background-color 0.3s ease; 
+    position: fixed; 
+    bottom: 20px; 
+    right: 20px; 
+    z-index: 1000; 
+}
+
+.circle-btn img {
+    width: 100%;
+    height: auto;
+    object-fit: cover; 
+}
+
+.circle-btn:hover {
+    background-color: #f0f0f0; 
+}
+
+/* Chatbot card styling */
+#chatbot-card {
+    position: fixed;
+    bottom: 90px; 
+    right: 20px; 
+    width: 380px;
+    height: 420px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    display: none; /* Initially hidden */
+    z-index: 999;
+    overflow: hidden;
+    /* display: flex; */
+    flex-direction: column;
+}
+
+#chatbot-card .card-body {
+    overflow-y: auto;
+    max-height: 300px;
+    padding: 10px;
+    flex-grow: 1; /* This makes the chat body take available space */
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    float: right;
+    margin-top: -45px;
+}
+
+.card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.form-control {
+    flex-grow: 1; /* Let the input field take available space */
+    margin-right: 10px; /* Add some space between input and button */
+}
+
+.message {
+    margin: 5px 0;
+}
+
+.message.user {
+    text-align: right;
+}
+
+.message.bot {
+    text-align: left;
+}
